@@ -29,25 +29,48 @@ document.addEventListener('DOMContentLoaded', () => {
     // Contact Form Logic
     const contactForm = document.getElementById('contact-form');
     if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+        contactForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = contactForm.querySelector('button');
             const originalText = btn.innerText;
 
+            // Get form data
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value
+            };
+
             btn.innerText = 'TRANSMITTING...';
             btn.disabled = true;
 
-            setTimeout(() => {
+            try {
+                // Ensure supabaseClient is available
+                if (!window.supabaseClient) {
+                    throw new Error('Supabase client not initialized');
+                }
+
+                const { error } = await window.supabaseClient
+                    .from('contacts')
+                    .insert([formData]);
+
+                if (error) throw error;
+
                 btn.innerText = 'MESSAGE DELIVERED';
                 btn.style.background = 'var(--accent)';
                 contactForm.reset();
-
+            } catch (error) {
+                console.error('Error submitting form:', error);
+                btn.innerText = 'TRANSMISSION FAILED';
+                btn.style.background = '#ff4444';
+            } finally {
                 setTimeout(() => {
                     btn.innerText = originalText;
-                    btn.style.background = 'var(--primary)';
+                    btn.style.background = ''; // Reset to CSS default
                     btn.disabled = false;
                 }, 3000);
-            }, 1500);
+            }
         });
     }
 
