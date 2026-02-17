@@ -214,6 +214,43 @@
             border: 1px solid rgba(255, 0, 122, 0.2);
         }
 
+        /* Troubleshooting Guide */
+        .troubleshooting-card {
+            background: rgba(255, 171, 0, 0.05);
+            border: 1px solid rgba(255, 171, 0, 0.2);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-top: 3rem;
+            display: none;
+            /* Only show on error */
+        }
+
+        .troubleshooting-card h2 {
+            color: #ffab00;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .troubleshooting-card code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            color: var(--primary);
+            font-family: monospace;
+        }
+
+        .troubleshooting-card ol {
+            padding-left: 1.5rem;
+            color: var(--text-muted);
+        }
+
+        .troubleshooting-card li {
+            margin-bottom: 0.5rem;
+        }
+
         @keyframes spin {
             to {
                 transform: rotate(360deg);
@@ -308,6 +345,26 @@
                             </tbody>
                         </table>
                     </div>
+                </div>
+
+                <!-- Troubleshooting Guide -->
+                <div id="troubleshooting-guide" class="troubleshooting-card">
+                    <h2><i class="fas fa-lightbulb"></i> Deletion Troubleshooting</h2>
+                    <p>If records aren't being removed, it's likely due to <strong>Row Level Security (RLS)</strong> in
+                        Supabase. By default, anonymous users cannot delete data.</p>
+                    <p style="margin: 1rem 0;"><strong>How to fix:</strong></p>
+                    <ol>
+                        <li>Go to your <strong>Supabase Dashboard</strong>.</li>
+                        <li>Navigate to <strong>Table Editor</strong> > select <code>contacts</code> table.</li>
+                        <li>Click <strong>RLS Disabled</strong> (or <strong>Add Policy</strong>).</li>
+                        <li>Create a new policy using <strong>"Enable Delete for Anon"</strong> template or use this SQL
+                            in the SQL Editor:</li>
+                    </ol>
+                    <pre
+                        style="background: rgba(0,0,0,0.4); padding: 1rem; border-radius: 8px; margin-top: 1rem; overflow-x: auto;"><code>CREATE POLICY "Enable delete for anonymous users" 
+ON public.contacts 
+FOR DELETE 
+USING (true);</code></pre>
                 </div>
             </div>
         </main>
@@ -420,17 +477,28 @@
 
                 const delBtn = document.getElementById(`del-${id}`);
                 const originalContent = delBtn.innerHTML;
+                const troubleshootingGuide = document.getElementById('troubleshooting-guide');
 
                 try {
                     delBtn.disabled = true;
                     delBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
 
-                    const { error } = await window.supabaseClient
+                    // Use .select() to verify if a row was actually deleted
+                    const { data, error } = await window.supabaseClient
                         .from('contacts')
                         .delete()
-                        .eq('id', id);
+                        .eq('id', id)
+                        .select();
 
                     if (error) throw error;
+
+                    // If no data is returned, it means no row was deleted (likely RLS)
+                    if (!data || data.length === 0) {
+                        console.warn('Deletion attempted but no rows were affected. This is usually an RLS policy issue.');
+                        troubleshootingGuide.style.display = 'block';
+                        troubleshootingGuide.scrollIntoView({ behavior: 'smooth' });
+                        throw new Error('Permission denied. Please check your Supabase RLS policies (see guide below).');
+                    }
 
                     // Remove row with animation
                     const row = document.getElementById(`row-${id}`);
