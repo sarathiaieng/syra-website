@@ -314,9 +314,16 @@
                         <h1><i class="fas fa-shield-halved"></i> Admin Console</h1>
                         <p>Manage contact form bookings and inquiries.</p>
                     </div>
-                    <button id="refresh-btn" class="btn btn-outline" style="padding: 0.7rem 1.5rem; font-size: 0.8rem;">
-                        <i class="fas fa-sync-alt"></i> Refresh Data
-                    </button>
+                    <div style="display: flex; gap: 1rem;">
+                        <button id="refresh-btn" class="btn btn-outline"
+                            style="padding: 0.7rem 1.5rem; font-size: 0.8rem;">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                        <button id="logout-btn" class="btn btn-outline"
+                            style="padding: 0.7rem 1.5rem; font-size: 0.8rem; border-color: rgba(255, 255, 255, 0.15);">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
                 </header>
 
                 <!-- Stats -->
@@ -375,16 +382,35 @@ USING (true);</code></pre>
     <script src="js/supabase-config.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             const contactsList = document.getElementById('contacts-list');
             const totalBookingsEl = document.getElementById('total-bookings');
             const refreshBtn = document.getElementById('refresh-btn');
+            const logoutBtn = document.getElementById('logout-btn');
+
+            // Check Authentication
+            const { data: { session } } = await window.supabaseClient.auth.getSession();
+            if (!session) {
+                // Not logged in, redirect to login
+                window.location.href = 'login.html';
+                return;
+            }
 
             // Initial load
             fetchContacts();
 
             refreshBtn.addEventListener('click', () => {
                 fetchContacts();
+            });
+
+            // Logout Logic
+            logoutBtn.addEventListener('click', async () => {
+                const { error } = await window.supabaseClient.auth.signOut();
+                if (error) {
+                    alert('Error signing out: ' + error.message);
+                } else {
+                    window.location.href = 'login.html';
+                }
             });
 
             async function fetchContacts() {

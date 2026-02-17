@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | SYRA</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Existing Styles Integration -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        body {
+            background: radial-gradient(circle at center, #0a0a0a, var(--bg-color));
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 3rem;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 450px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .login-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+        }
+
+        .login-header h1 i {
+            color: var(--primary);
+            text-shadow: var(--neon-glow);
+        }
+
+        .login-header p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+            font-family: var(--font-heading);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: white;
+            font-family: var(--font-body);
+            transition: var(--transition);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.1);
+        }
+
+        .login-btn {
+            width: 100%;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        #login-error {
+            background: rgba(255, 0, 122, 0.1);
+            color: var(--accent);
+            border: 1px solid rgba(255, 0, 122, 0.2);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-size: 0.85rem;
+            display: none;
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            75% {
+                transform: translateX(5px);
+            }
+        }
+
+        .back-home {
+            display: block;
+            text-align: center;
+            margin-top: 2rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: var(--transition);
+        }
+
+        .back-home:hover {
+            color: var(--primary);
+        }
+    </style>
+</head>
+
+<body class="dark-theme">
+    <div class="login-card">
+        <div class="login-header">
+            <h1><i class="fas fa-lock"></i> SYRA Admin</h1>
+            <p>Access the central command center.</p>
+        </div>
+
+        <div id="login-error"></div>
+
+        <form id="login-form">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" placeholder="admin@syra.agency" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn btn-primary login-btn" id="submit-btn">
+                <span>Authorize Access</span>
+                <i class="fas fa-sign-in-alt"></i>
+            </button>
+        </form>
+
+        <a href="index.html" class="back-home"><i class="fas fa-arrow-left"></i> Back to website</a>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const loginForm = document.getElementById('login-form');
+            const loginError = document.getElementById('login-error');
+            const submitBtn = document.getElementById('submit-btn');
+
+            // Check if already logged in
+            const { data: { session } } = await window.supabaseClient.auth.getSession();
+            if (session) {
+                window.location.href = 'admin.html';
+            }
+
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                // Reset UI
+                loginError.style.display = 'none';
+                submitBtn.disabled = true;
+                const originalContent = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating...';
+
+                try {
+                    const { data, error } = await window.supabaseClient.auth.signInWithPassword({
+                        email,
+                        password
+                    });
+
+                    if (error) throw error;
+
+                    // Success
+                    window.location.href = 'admin.html';
+
+                } catch (error) {
+                    console.error('Login Error:', error);
+                    loginError.textContent = error.message;
+                    loginError.style.display = 'block';
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalContent;
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
