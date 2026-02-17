@@ -280,14 +280,98 @@
             }
         }
 
-        @media (max-width: 600px) {
-            .dashboard-header {
-                text-align: center;
-                justify-content: center;
+        @media (max-width: 768px) {
+            .table-container {
+                background: transparent;
+                border: none;
+                padding: 0;
             }
 
-            .dashboard-title h1 {
-                font-size: 2rem;
+            .contacts-table,
+            .contacts-table thead,
+            .contacts-table tbody,
+            .contacts-table th,
+            .contacts-table td,
+            .contacts-table tr {
+                display: block;
+            }
+
+            .contacts-table thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+
+            .contacts-table tr {
+                background: var(--admin-glass);
+                border: 1px solid var(--admin-border);
+                border-radius: 12px;
+                margin-bottom: 1.5rem;
+                padding: 1rem;
+                animation: fadeIn 0.5s ease-out;
+            }
+
+            .contacts-table td {
+                border: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+                position: relative;
+                padding-left: 50% !important;
+                text-align: right;
+                min-height: 3rem;
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+            }
+
+            .contacts-table td:last-child {
+                border-bottom: none;
+            }
+
+            .contacts-table td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 1.5rem;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                text-align: left;
+                font-weight: 600;
+                color: var(--primary);
+                text-transform: uppercase;
+                font-size: 0.75rem;
+                letter-spacing: 1px;
+            }
+
+            .contacts-table td.message-cell {
+                display: block;
+                text-align: left;
+                padding-left: 1.5rem !important;
+                padding-top: 3rem !important;
+                max-width: none;
+            }
+
+            .contacts-table td.message-cell::before {
+                top: 1rem;
+                left: 1.5rem;
+                width: 100%;
+            }
+
+            .delete-btn {
+                width: 100%;
+                justify-content: center;
+                margin-top: 0.5rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .dashboard-header {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+
+            .dashboard-header div {
+                justify-content: center;
             }
         }
     </style>
@@ -456,11 +540,11 @@ USING (true);</code></pre>
 
                     return `
                         <tr id="row-${contact.id}">
-                            <td class="date-cell">${date}</td>
-                            <td><strong>${contact.name || contact.full_name}</strong></td>
-                            <td class="email-cell">${contact.email}</td>
-                            <td class="message-cell">${contact.message || 'No message provided.'}</td>
-                            <td>
+                            <td data-label="Date" class="date-cell">${date}</td>
+                            <td data-label="Prospect"><strong>${contact.name || contact.full_name}</strong></td>
+                            <td data-label="Email" class="email-cell">${contact.email}</td>
+                            <td data-label="Message" class="message-cell">${contact.message || 'No message provided.'}</td>
+                            <td data-label="Action">
                                 <button class="delete-btn" onclick="deleteContact('${contact.id}')" id="del-${contact.id}">
                                     <i class="far fa-trash-alt"></i> Delete
                                 </button>
