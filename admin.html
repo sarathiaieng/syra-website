@@ -306,21 +306,18 @@
                 background: var(--admin-glass);
                 border: 1px solid var(--admin-border);
                 border-radius: 12px;
-                margin-bottom: 1.5rem;
-                padding: 1rem;
+                margin-bottom: 2rem;
+                padding: 1.5rem;
                 animation: fadeIn 0.5s ease-out;
             }
 
             .contacts-table td {
                 border: none;
                 border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-                position: relative;
-                padding-left: 50% !important;
-                text-align: right;
-                min-height: 3rem;
-                display: flex;
-                align-items: center;
-                justify-content: flex-end;
+                padding: 1rem 0 !important;
+                text-align: left;
+                display: block;
+                width: 100%;
             }
 
             .contacts-table td:last-child {
@@ -329,37 +326,27 @@
 
             .contacts-table td::before {
                 content: attr(data-label);
-                position: absolute;
-                left: 1.5rem;
-                width: 45%;
-                padding-right: 10px;
-                white-space: nowrap;
-                text-align: left;
-                font-weight: 600;
+                display: block;
+                font-weight: 800;
                 color: var(--primary);
                 text-transform: uppercase;
-                font-size: 0.75rem;
-                letter-spacing: 1px;
+                font-size: 0.7rem;
+                letter-spacing: 1.5px;
+                margin-bottom: 0.5rem;
+                opacity: 0.8;
             }
 
             .contacts-table td.message-cell {
-                display: block;
-                text-align: left;
-                padding-left: 1.5rem !important;
-                padding-top: 3rem !important;
                 max-width: none;
-            }
-
-            .contacts-table td.message-cell::before {
-                top: 1rem;
-                left: 1.5rem;
-                width: 100%;
+                white-space: normal;
+                line-height: 1.6;
             }
 
             .delete-btn {
                 width: 100%;
                 justify-content: center;
-                margin-top: 0.5rem;
+                margin-top: 1rem;
+                padding: 1rem;
             }
         }
 
