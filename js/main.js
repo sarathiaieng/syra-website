@@ -62,7 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 contactForm.reset();
             } catch (error) {
                 console.error('Error submitting form:', error);
-                alert('Submission Error: ' + error.message);
                 btn.innerText = 'TRANSMISSION FAILED';
                 btn.style.background = '#ff4444';
             } finally {
