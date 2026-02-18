@@ -414,6 +414,7 @@
                                     <th>Date</th>
                                     <th>Name</th>
                                     <th>Email</th>
+                                    <th>Subject</th>
                                     <th>Message</th>
                                     <th>Action</th>
                                 </tr>
@@ -494,6 +495,10 @@ USING (true);</code></pre>
 
                     if (error) throw error;
 
+                    if (data && data.length > 0) {
+                        console.log('Last booking data structure:', data[0]);
+                    }
+
                     renderContacts(data);
                 } catch (error) {
                     console.error('Supabase Error:', error);
@@ -507,7 +512,7 @@ USING (true);</code></pre>
                 if (contacts.length === 0) {
                     contactsList.innerHTML = `
                         <tr>
-                            <td colspan="5" class="empty-state">
+                            <td colspan="6" class="empty-state">
                                 <i class="far fa-folder-open" style="font-size: 2rem; display: block; margin-bottom: 1rem;"></i>
                                 No inquiries found yet.
                             </td>
@@ -530,6 +535,7 @@ USING (true);</code></pre>
                             <td data-label="Date" class="date-cell">${date}</td>
                             <td data-label="Prospect"><strong>${contact.name || contact.full_name}</strong></td>
                             <td data-label="Email" class="email-cell">${contact.email}</td>
+                            <td data-label="Subject"><strong>${contact.subject || contact.Subject || contact.booking_subject || 'N/A'}</strong></td>
                             <td data-label="Message" class="message-cell">${contact.message || 'No message provided.'}</td>
                             <td data-label="Action">
                                 <button class="delete-btn" onclick="deleteContact('${contact.id}')" id="del-${contact.id}">
@@ -544,7 +550,7 @@ USING (true);</code></pre>
             function showLoading() {
                 contactsList.innerHTML = `
                     <tr>
-                        <td colspan="5">
+                        <td colspan="6">
                             <div class="loading-overlay">
                                 <div class="spinner"></div>
                                 <p>Accessing Secure Database...</p>
@@ -557,7 +563,7 @@ USING (true);</code></pre>
             function showError(message) {
                 contactsList.innerHTML = `
                     <tr>
-                        <td colspan="5">
+                        <td colspan="6">
                             <div class="error-state">
                                 <i class="fas fa-exclamation-triangle" style="font-size: 2rem; display: block; margin-bottom: 1rem;"></i>
                                 <p>Failed to retrieve data: ${message}</p>
