@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | SYRA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-family: var(--font-heading);
+            font-size: 0.8rem;
+            color: var(--primary);
+            text-transform: uppercase;
+        }
+
+        .form-control {
+            width: 100%;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 1rem;
+            color: var(--text-color);
+            border-radius: 4px;
+            font-family: var(--font-body);
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0, 242, 255, 0.2);
+        }
+
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background-color: #25d366;
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+            background-color: #128c7e;
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);
+        }
+
+        .contact-details-card {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 4rem 3rem !important;
+        }
+
+        .contact-item {
+            margin-bottom: 3.5rem;
+            transition: var(--transition);
+        }
+
+        .contact-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .contact-icon-wrapper {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(0, 242, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+        }
+
+        .contact-item:hover .contact-icon-wrapper {
+            background: rgba(0, 242, 255, 0.08);
+            border-color: var(--primary);
+            box-shadow: var(--neon-glow);
+            transform: scale(1.08) translateY(-3px);
+        }
+
+        .contact-item i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin: 0;
+            display: block;
+            transition: var(--transition);
+        }
+
+        .contact-item:hover i {
+            color: #ffffff;
+            text-shadow: var(--neon-glow);
+        }
+
+        .contact-item h3 {
+            font-family: var(--font-heading);
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            margin-bottom: 0.8rem;
+        }
+
+        .contact-link {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: var(--transition);
+            letter-spacing: -0.01em;
+        }
+
+        .contact-link:hover {
+            color: var(--primary);
+            text-shadow: var(--neon-glow);
+        }
+
+        /* Premium Contact Section CSS */
+        .premium-contact {
+            position: relative;
+            padding: 2rem 0 6rem;
+            overflow: hidden;
+        }
+
+        .ambient-blob {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0,242,255,0.08) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            top: -200px;
+            left: -300px;
+            animation: pulse-blob 10s infinite alternate ease-in-out;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .ambient-blob.right {
+            top: auto;
+            bottom: -200px;
+            left: auto;
+            right: -300px;
+            background: radial-gradient(circle, rgba(144,0,255,0.08) 0%, rgba(0,0,0,0) 70%);
+            animation-delay: -5s;
+        }
+
+        @keyframes pulse-blob {
+            0% { transform: scale(1) translate(0, 0); opacity: 0.5; }
+            100% { transform: scale(1.2) translate(40px, 40px); opacity: 0.8; }
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            position: relative;
+            z-index: 1;
+            align-items: center;
+        }
+
+        @media (max-width: 992px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+        }
+
+        .contact-content h2 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #a5a5a5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-family: var(--font-heading);
+            font-weight: 800;
+        }
+
+        .contact-content p.subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+        }
+
+        .services-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-bottom: 3.5rem;
+        }
+
+        .service-tag {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            color: #fff;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .service-tag:hover {
+            border-color: var(--primary);
+            background: rgba(0, 242, 255, 0.08);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 242, 255, 0.15);
+        }
+
+        .mini-contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .mini-contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .mini-contact-item i {
+            font-size: 1.2rem;
+            color: var(--primary);
+            background: rgba(0, 242, 255, 0.1);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 242, 255, 0.2);
+            transition: var(--transition);
+        }
+
+        .mini-contact-item:hover i {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: var(--neon-glow);
+            transform: scale(1.1);
+        }
+
+        .mini-contact-item div h4 {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 0.3rem;
+            letter-spacing: 1px;
+        }
+
+        .mini-contact-item div a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .mini-contact-item div a:hover {
+            color: var(--primary);
+        }
+
+        .social-row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-row a {
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            color: #fff;
+            transition: var(--transition);
+            font-size: 1.2rem;
+        }
+
+        .social-row a:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 242, 255, 0.3);
+        }
+
+        .glass-card-form {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 1rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .glass-card-form::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        }
+
+        .form-iframe-container {
+            width: 100%;
+            height: 858px;
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .form-iframe-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: transparent;
+        }
+    </style>
+</head>
+
+<body class="dark-theme">
+    <div id="app">
+        <nav id="navbar" class="navbar scrolled">
+            <div class="container container-nav">
+                <a href="../index.html" class="logo">SYRA<span class="dot">.</span></a>
+                <ul class="nav-links">
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="portfolio.html">Portfolio</a></li>
+                    <li><a href="contact.html" class="active">Contact</a></li>
+                </ul>
+                <button class="mobile-menu-btn" aria-label="Toggle Menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </nav>
+
+        <main id="main-content" style="padding-top: 100px;">
+            <section class="premium-contact">
+                <div class="ambient-blob"></div>
+                <div class="ambient-blob right"></div>
+                
+                <div class="container contact-grid">
+                    <div class="contact-content reveal">
+                        <h2>Start Your Digital Transformation</h2>
+                        <p class="subtitle">SYRA helps futuristic brands scale infinitely with cutting-edge strategies and AI-powered solutions.</p>
+                        
+                        <div class="services-tags">
+                            <span class="service-tag">Video Editing</span>
+                            <span class="service-tag">Reels Editing</span>
+                            <span class="service-tag">Photo Editing</span>
+                            <span class="service-tag">Poster Designing</span>
+                            <span class="service-tag">Logo Designing</span>
+                            <span class="service-tag">Website Designing</span>
+                            <span class="service-tag">Social Media Management</span>
+                            <span class="service-tag">AI-Powered Marketing</span>
+                            <span class="service-tag">Content Writing</span>
+                        </div>
+
+                        <div class="mini-contact-info">
+                            <div class="mini-contact-item">
+                                <i class="fas fa-envelope"></i>
+                                <div>
+                                    <h4>Email Us</h4>
+                                    <a href="mailto:contact@syra.com">contact@syra.com</a>
+                                </div>
+                            </div>
+                            <div class="mini-contact-item">
+                                <i class="fas fa-phone-alt"></i>
+                                <div>
+                                    <h4>Call Us</h4>
+                                    <a href="tel:+919962409712">+91 99624 09712</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="social-row">
+                            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="glass-card-form reveal" style="transition-delay: 0.2s;">
+                        <div class="form-iframe-container">
+                            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeDq58uShZkdZ4iAUDUoPgl62f3Tn5LeZATaRcDcM1ggnLhHA/viewform?embedded=true" width="640" height="858" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer id="footer">
+            <div class="container footer-grid">
+                <div class="footer-info">
+                    <a href="#" class="logo">SYRA<span class="dot">.</span></a>
+                    <p>Next-generation AI marketing agency for startups and tech brands.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="portfolio.html">Portfolio</a></li>
+                    </ul>
+                </div>
+                <div class="footer-services">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="services.html">AI Automation</a></li>
+                        <li><a href="services.html">Web Development</a></li>
+                        <li><a href="services.html">Paid Ads</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 SYRA. All Rights Reserved.</p>
+                <div class="social-links">
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </footer>
+        <a href="https://wa.me/919962409712" class="whatsapp-float" target="_blank" aria-label="Chat on WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+        </a>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase-config.js"></script>
+    <script src="../js/main.js"></script>
+</body>
+
+</html>

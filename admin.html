@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | SYRA</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Existing Styles Integration -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        :root {
+            --admin-glass: rgba(255, 255, 255, 0.05);
+            --admin-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            background: radial-gradient(circle at top right, #0a0a0a, var(--bg-color));
+            min-height: 100vh;
+        }
+
+        .admin-container {
+            padding-top: 120px;
+            padding-bottom: 60px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .dashboard-title h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .dashboard-title h1 i {
+            color: var(--primary);
+            font-size: 2rem;
+            text-shadow: var(--neon-glow);
+        }
+
+        .dashboard-title p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--admin-glass);
+            border: 1px solid var(--admin-border);
+            padding: 1.5rem;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-card h3 {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+        }
+
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-shadow: var(--neon-glow);
+        }
+
+        /* Table UI */
+        .table-wrapper {
+            background: var(--admin-glass);
+            border: 1px solid var(--admin-border);
+            border-radius: 16px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .contacts-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .contacts-table th {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1.2rem 1.5rem;
+            font-family: var(--font-heading);
+            color: var(--primary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid var(--admin-border);
+        }
+
+        .contacts-table td {
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-color);
+            font-size: 0.95rem;
+            vertical-align: top;
+        }
+
+        .contacts-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .contacts-table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+            transition: background 0.2s ease;
+        }
+
+        .email-cell {
+            color: var(--text-muted);
+        }
+
+        .date-cell {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .message-cell {
+            max-width: 300px;
+            word-wrap: break-word;
+            line-height: 1.4;
+        }
+
+        /* Delete Button */
+        .delete-btn {
+            background: rgba(255, 0, 122, 0.1);
+            color: var(--accent);
+            border: 1px solid rgba(255, 0, 122, 0.3);
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .delete-btn:hover {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 0 15px rgba(255, 0, 122, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .delete-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Loading & Empty State */
+        .loading-overlay {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(0, 242, 255, 0.1);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            box-shadow: var(--neon-glow);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem;
+            color: var(--text-muted);
+        }
+
+        .error-state {
+            text-align: center;
+            padding: 4rem;
+            color: var(--accent);
+            background: rgba(255, 0, 122, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 0, 122, 0.2);
+        }
+
+        /* Troubleshooting Guide */
+        .troubleshooting-card {
+            background: rgba(255, 171, 0, 0.05);
+            border: 1px solid rgba(255, 171, 0, 0.2);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-top: 3rem;
+            display: none;
+            /* Only show on error */
+        }
+
+        .troubleshooting-card h2 {
+            color: #ffab00;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .troubleshooting-card code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            color: var(--primary);
+            font-family: monospace;
+        }
+
+        .troubleshooting-card ol {
+            padding-left: 1.5rem;
+            color: var(--text-muted);
+        }
+
+        .troubleshooting-card li {
+            margin-bottom: 0.5rem;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Table */
+        @media (max-width: 900px) {
+            .table-wrapper {
+                overflow-x: auto;
+            }
+
+            .contacts-table {
+                min-width: 800px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .table-container {
+                background: transparent;
+                border: none;
+                padding: 0;
+            }
+
+            .contacts-table,
+            .contacts-table thead,
+            .contacts-table tbody,
+            .contacts-table th,
+            .contacts-table td,
+            .contacts-table tr {
+                display: block;
+            }
+
+            .contacts-table thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+
+            .contacts-table tr {
+                background: var(--admin-glass);
+                border: 1px solid var(--admin-border);
+                border-radius: 12px;
+                margin-bottom: 2rem;
+                padding: 1.5rem;
+                animation: fadeIn 0.5s ease-out;
+            }
+
+            .contacts-table td {
+                border: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+                padding: 1rem 0 !important;
+                text-align: left;
+                display: block;
+                width: 100%;
+            }
+
+            .contacts-table td:last-child {
+                border-bottom: none;
+            }
+
+            .contacts-table td::before {
+                content: attr(data-label);
+                display: block;
+                font-weight: 800;
+                color: var(--primary);
+                text-transform: uppercase;
+                font-size: 0.7rem;
+                letter-spacing: 1.5px;
+                margin-bottom: 0.5rem;
+                opacity: 0.8;
+            }
+
+            .contacts-table td.message-cell {
+                max-width: none;
+                white-space: normal;
+                line-height: 1.6;
+            }
+
+            .delete-btn {
+                width: 100%;
+                justify-content: center;
+                margin-top: 1rem;
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .dashboard-header {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+
+            .dashboard-header div {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body class="dark-theme">
+    <div id="app">
+        <!-- Navigation -->
+        <nav id="navbar" class="navbar scrolled">
+            <div class="container container-nav">
+                <a href="index.html" class="logo">SYRA<span class="dot">.</span></a>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="admin.html" class="active">Admin</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <main class="admin-container">
+            <div class="container">
+                <!-- Header -->
+                <header class="dashboard-header">
+                    <div class="dashboard-title">
+                        <h1><i class="fas fa-shield-halved"></i> Admin Console</h1>
+                        <p>Manage contact form bookings and inquiries.</p>
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <button id="refresh-btn" class="btn btn-outline"
+                            style="padding: 0.7rem 1.5rem; font-size: 0.8rem;">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                        <button id="logout-btn" class="btn btn-outline"
+                            style="padding: 0.7rem 1.5rem; font-size: 0.8rem; border-color: rgba(255, 255, 255, 0.15);">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </header>
+
+                <!-- Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Total Bookings</h3>
+                        <div id="total-bookings" class="value">0</div>
+                    </div>
+                </div>
+
+                <!-- Main Content -->
+                <div id="dashboard-content">
+                    <div class="table-wrapper">
+                        <table class="contacts-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Subject</th>
+                                    <th>Message</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="contacts-list">
+                                <!-- Data will be injected here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Troubleshooting Guide -->
+                <div id="troubleshooting-guide" class="troubleshooting-card">
+                    <h2><i class="fas fa-lightbulb"></i> Deletion Troubleshooting</h2>
+                    <p>If records aren't being removed, it's likely due to <strong>Row Level Security (RLS)</strong> in
+                        Supabase. By default, anonymous users cannot delete data.</p>
+                    <p style="margin: 1rem 0;"><strong>How to fix:</strong></p>
+                    <ol>
+                        <li>Go to your <strong>Supabase Dashboard</strong>.</li>
+                        <li>Navigate to <strong>Table Editor</strong> > select <code>contacts</code> table.</li>
+                        <li>Click <strong>RLS Disabled</strong> (or <strong>Add Policy</strong>).</li>
+                        <li>Create a new policy using <strong>"Enable Delete for Anon"</strong> template or use this SQL
+                            in the SQL Editor:</li>
+                    </ol>
+                    <pre
+                        style="background: rgba(0,0,0,0.4); padding: 1rem; border-radius: 8px; margin-top: 1rem; overflow-x: auto;"><code>CREATE POLICY "Enable delete for anonymous users" 
+ON public.contacts 
+FOR DELETE 
+USING (true);</code></pre>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const contactsList = document.getElementById('contacts-list');
+            const totalBookingsEl = document.getElementById('total-bookings');
+            const refreshBtn = document.getElementById('refresh-btn');
+            const logoutBtn = document.getElementById('logout-btn');
+
+            // Check Authentication
+            const { data: { session } } = await window.supabaseClient.auth.getSession();
+            if (!session) {
+                // Not logged in, redirect to login
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Initial load
+            fetchContacts();
+
+            refreshBtn.addEventListener('click', () => {
+                fetchContacts();
+            });
+
+            // Logout Logic
+            logoutBtn.addEventListener('click', async () => {
+                const { error } = await window.supabaseClient.auth.signOut();
+                if (error) {
+                    alert('Error signing out: ' + error.message);
+                } else {
+                    window.location.href = 'login.html';
+                }
+            });
+
+            async function fetchContacts() {
+                showLoading();
+                try {
+                    const { data, error } = await window.supabaseClient
+                        .from('contacts')
+                        .select('*')
+                        .order('created_at', { ascending: false });
+
+                    if (error) throw error;
+
+                    if (data && data.length > 0) {
+                        console.log('Last booking data structure:', data[0]);
+                    }
+
+                    renderContacts(data);
+                } catch (error) {
+                    console.error('Supabase Error:', error);
+                    showError(error.message);
+                }
+            }
+
+            function renderContacts(contacts) {
+                totalBookingsEl.textContent = contacts.length;
+
+                if (contacts.length === 0) {
+                    contactsList.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="empty-state">
+                                <i class="far fa-folder-open" style="font-size: 2rem; display: block; margin-bottom: 1rem;"></i>
+                                No inquiries found yet.
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                contactsList.innerHTML = contacts.map(contact => {
+                    const date = new Date(contact.created_at).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+
+                    return `
+                        <tr id="row-${contact.id}">
+                            <td data-label="Date" class="date-cell">${date}</td>
+                            <td data-label="Prospect"><strong>${contact.name || contact.full_name}</strong></td>
+                            <td data-label="Email" class="email-cell">${contact.email}</td>
+                            <td data-label="Subject"><strong>${contact.subject || contact.Subject || contact.booking_subject || 'N/A'}</strong></td>
+                            <td data-label="Message" class="message-cell">${contact.message || 'No message provided.'}</td>
+                            <td data-label="Action">
+                                <button class="delete-btn" onclick="deleteContact('${contact.id}')" id="del-${contact.id}">
+                                    <i class="far fa-trash-alt"></i> Delete
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+
+            function showLoading() {
+                contactsList.innerHTML = `
+                    <tr>
+                        <td colspan="6">
+                            <div class="loading-overlay">
+                                <div class="spinner"></div>
+                                <p>Accessing Secure Database...</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }
+
+            function showError(message) {
+                contactsList.innerHTML = `
+                    <tr>
+                        <td colspan="6">
+                            <div class="error-state">
+                                <i class="fas fa-exclamation-triangle" style="font-size: 2rem; display: block; margin-bottom: 1rem;"></i>
+                                <p>Failed to retrieve data: ${message}</p>
+                                <button onclick="location.reload()" class="btn btn-outline" style="margin-top: 1rem; border-color: var(--accent); color: var(--accent);">Retry Connection</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }
+
+            // Expose delete function to global scope for onclick handlers
+            window.deleteContact = async function (id) {
+                if (!confirm('Are you sure you want to remove this record? This action cannot be undone.')) return;
+
+                const delBtn = document.getElementById(`del-${id}`);
+                const originalContent = delBtn.innerHTML;
+                const troubleshootingGuide = document.getElementById('troubleshooting-guide');
+
+                try {
+                    delBtn.disabled = true;
+                    delBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+                    // Use .select() to verify if a row was actually deleted
+                    const { data, error } = await window.supabaseClient
+                        .from('contacts')
+                        .delete()
+                        .eq('id', id)
+                        .select();
+
+                    if (error) throw error;
+
+                    // If no data is returned, it means no row was deleted (likely RLS)
+                    if (!data || data.length === 0) {
+                        console.warn('Deletion attempted but no rows were affected. This is usually an RLS policy issue.');
+                        troubleshootingGuide.style.display = 'block';
+                        troubleshootingGuide.scrollIntoView({ behavior: 'smooth' });
+                        throw new Error('Permission denied. Please check your Supabase RLS policies (see guide below).');
+                    }
+
+                    // Remove row with animation
+                    const row = document.getElementById(`row-${id}`);
+                    row.style.opacity = '0';
+                    row.style.transform = 'translateX(20px)';
+                    row.style.transition = 'all 0.5s ease';
+
+                    setTimeout(() => {
+                        row.remove();
+                        // Update counter
+                        const currentVal = parseInt(totalBookingsEl.textContent);
+                        totalBookingsEl.textContent = Math.max(0, currentVal - 1);
+
+                        // Check if now empty
+                        if (contactsList.children.length === 0) {
+                            fetchContacts(); // Will show empty state
+                        }
+                    }, 500);
+
+                } catch (error) {
+                    console.error('Delete Error:', error);
+                    alert('Failed to delete record: ' + error.message);
+                    delBtn.disabled = false;
+                    delBtn.innerHTML = originalContent;
+                }
+            };
+        });
+    </script>
+</body>
+
+</html>
